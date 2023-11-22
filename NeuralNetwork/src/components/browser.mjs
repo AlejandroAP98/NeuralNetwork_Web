@@ -1,3 +1,5 @@
+export let resultadosIteraciones = [];
+export let pesos =[];
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
@@ -4895,17 +4897,17 @@
       }
       function checkThrowError() {
         recording.push(`${indent}(() => {
-${indent}const error = ${contextName}.getError();
-${indent}if (error !== ${contextName}.NONE) {
-${indent}  const names = Object.getOwnPropertyNames(gl);
-${indent}  for (let i = 0; i < names.length; i++) {
-${indent}    const name = names[i];
-${indent}    if (${contextName}[name] === error) {
-${indent}      throw new Error('${contextName} threw ' + name);
-${indent}    }
-${indent}  }
-${indent}}
-${indent}})();`);
+          ${indent}const error = ${contextName}.getError();
+          ${indent}if (error !== ${contextName}.NONE) {
+          ${indent}  const names = Object.getOwnPropertyNames(gl);
+          ${indent}  for (let i = 0; i < names.length; i++) {
+          ${indent}    const name = names[i];
+          ${indent}    if (${contextName}[name] === error) {
+          ${indent}      throw new Error('${contextName} threw ' + name);
+          ${indent}    }
+          ${indent}  }
+          ${indent}}
+          ${indent}})();`);
       }
       function methodCallToString(method, args) {
         return `${contextName}.${method}(${argumentsToString(args, { contextName, contextVariables, getEntity, addVariable, variables, onUnrecognizedArgumentLookup })})`;
@@ -23410,12 +23412,13 @@ highp float nrand(highp vec2 n) {
             return this.layers[this.layers.length - 1].weights;
         }
         train(data, options = {}) {
+          
             const { preparedData, status, endTime } = this._prepTraining(data, options);
             let continueTicking = true;
             const calculateError = () => this._calculateTrainingError(preparedData);
             const trainPatterns = () => this._trainPatterns(preparedData);
             while (continueTicking) {
-                continueTicking = this._trainingTick(status, endTime, calculateError, trainPatterns);
+              continueTicking = this._trainingTick(status, endTime, calculateError, trainPatterns);
             }
             return status;
         }
@@ -23463,6 +23466,7 @@ highp float nrand(highp vec2 n) {
             status.iterations++;
             return true;
         }
+        
         _prepTraining(data, options) {
             this._updateTrainingOptions(options);
             const formattedData = this.formatData(data);
@@ -23904,8 +23908,8 @@ highp float nrand(highp vec2 n) {
             beta2: 0.999,
             epsilon: 1e-8,
         };
-    }
-    class NeuralNetwork {
+      }
+      class NeuralNetwork { 
         constructor(options = {}) {
             this.options = defaults$2();
             this.trainOpts = trainDefaults$2();
@@ -23944,6 +23948,7 @@ highp float nrand(highp vec2 n) {
             const { inputSize, hiddenLayers, outputSize } = this.options;
             if (inputSize && outputSize) {
                 this.sizes = [inputSize].concat(hiddenLayers !== null && hiddenLayers !== void 0 ? hiddenLayers : []).concat([outputSize]);
+                
             }
         }
         /**
@@ -24284,7 +24289,8 @@ highp float nrand(highp vec2 n) {
             status.iterations++;
             if (log && status.iterations % logPeriod === 0) {
                 status.error = this.calculateTrainingError(data);
-                log(status);
+                // log(status);
+                
             }
             else if (status.iterations % this.errorCheckInterval === 0) {
                 status.error = this.calculateTrainingError(data);
@@ -24298,6 +24304,13 @@ highp float nrand(highp vec2 n) {
                     error: status.error,
                 });
             }
+            if(!isNaN(status.error)){
+              resultadosIteraciones.push(status.error);
+            }else{
+              resultadosIteraciones.push(0);
+            }
+              
+
             return true;
         }
         prepTraining(data, options = {}) {
@@ -24319,10 +24332,11 @@ highp float nrand(highp vec2 n) {
         train(data, options = {}) {
             const { preparedData, status, endTime } = this.prepTraining(data, options);
             while (true) {
-                if (!this.trainingTick(preparedData, status, endTime)) {
+                if (!this.trainingTick(preparedData, status, endTime)) {      
                     break;
                 }
             }
+            
             return status;
         }
         async trainAsync(data, options = {}) {
@@ -24722,9 +24736,10 @@ highp float nrand(highp vec2 n) {
                 this.initialize();
             }
             // use Array.from, keeping json small
-            const jsonLayerWeights = this.weights.map((layerWeights) => {
-                return layerWeights.map((layerWeights) => Array.from(layerWeights));
+            const jsonLayerWeights = this.weights.map((layerWeights) => { 
+              return layerWeights.map((layerWeights) => Array.from(layerWeights));
             });
+            
             const jsonLayerBiases = this.biases.map((layerBiases) => Array.from(layerBiases));
             const jsonLayers = [];
             const outputLength = this.sizes.length - 1;
@@ -24848,7 +24863,6 @@ highp float nrand(highp vec2 n) {
                 result = `[${layersAsMath.join(',')}]`;
             }
             const source = `${inputLookup}${needsVar ? 'var v;' : ''}return ${result};`;
-            // eslint-disable-next-line @typescript-eslint/no-implied-eval,no-new-func
             return new Function('input', cb ? cb(source) : source);
         }
     }
@@ -26079,15 +26093,15 @@ highp float nrand(highp vec2 n) {
         }
         toFunctionString() {
             return `
-var characterTable = ${JSON.stringify(this.characterTable)};
-var indexTable = ${JSON.stringify(this.indexTable)};
-var characters = ${JSON.stringify(this.characters)};
-var dataFormatter = {
-  toIndexes: function ${this.toIndexes.toString()},
-  toIndexesInputOutput: function ${this.toIndexesInputOutput.toString()},
-  toCharacters: function ${this.toCharacters.toString()},
-  toIndexesValue: function ${this.toIndexesValue.toString()},
-};`;
+              var characterTable = ${JSON.stringify(this.characterTable)};
+              var indexTable = ${JSON.stringify(this.indexTable)};
+              var characters = ${JSON.stringify(this.characters)};
+              var dataFormatter = {
+                toIndexes: function ${this.toIndexes.toString()},
+                toIndexesInputOutput: function ${this.toIndexesInputOutput.toString()},
+                toCharacters: function ${this.toCharacters.toString()},
+                toIndexesValue: function ${this.toIndexesValue.toString()},
+              };`;
         }
         formatDataIn(input, output) {
             var _a;
@@ -27075,6 +27089,7 @@ var dataFormatter = {
             };
         }
         train(data, trainOpts = {}) {
+           
             var _a;
             this.trainOpts = trainOpts = {
                 ...trainDefaults$1,
@@ -27706,6 +27721,7 @@ ${innerFunctionsSwitch.join('\n')}
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         train(data, trainOpts = {}) {
+          
             this.trainOpts = trainOpts = {
                 ...trainDefaults$1,
                 ...trainOpts,
@@ -28973,6 +28989,5 @@ ${innerFunctionsSwitch.join('\n')}
     exports.utilities = utilities;
 
     Object.defineProperty(exports, '__esModule', { value: true });
-
 })));
 //# sourceMappingURL=browser.js.map

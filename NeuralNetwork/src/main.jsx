@@ -2,16 +2,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import {NextUIProvider} from '@nextui-org/react'
-import Nav from './Nav'
 import Body from './Body'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <NextUIProvider>
-      <Nav />
       <Body />
     </NextUIProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 )
 
