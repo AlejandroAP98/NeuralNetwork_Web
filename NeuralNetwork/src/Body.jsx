@@ -77,10 +77,9 @@ export default function Body() {
       complete: (result) => {
         // Procesa los datos según sea necesario
         const data = result.data.map((row) => ({
-          input: Object.values(row).slice(0, -1).map(Number),
-          output: [Number(Object.values(row).slice(-1)[0])], 
+          input: Object.values(row).slice(0, parseInt(neuronasEntrada)).map(Number),
+          output: Object.values(row).slice(parseInt(neuronasEntrada), parseInt(neuronasEntrada) + parseInt(neuronasSalida)).map(Number), 
         }));
-
         // Entrena la red neuronal con los datos procesados
         const parametrosRedNeuronal = {
           neuronasEntrada: parseInt(neuronasEntrada),
