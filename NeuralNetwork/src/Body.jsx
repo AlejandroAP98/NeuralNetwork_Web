@@ -76,6 +76,7 @@ export default function Body() {
     Papa.parse(selectedFile, {
       complete: (result) => {
         // Procesa los datos según sea necesario
+        
         const data = result.data.map((row) => ({
           input: Object.values(row).slice(0, parseInt(neuronasEntrada)).map(Number),
           output: Object.values(row).slice(parseInt(neuronasEntrada), parseInt(neuronasEntrada) + parseInt(neuronasSalida)).map(Number), 

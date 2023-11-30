@@ -29,6 +29,7 @@ export default function RedNeuronal(parametrosRedNeuronal, data) {
     outputSize: neuronasSalida,
     hiddenLayers: capasOcultas,
   });
+  
   // Configuración para el entrenamiento
   const config = {
     hiddenLayers: capasOcultas,
